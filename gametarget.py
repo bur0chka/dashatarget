@@ -13,7 +13,7 @@ def gameover():
     drawText('Игра окончена!', font, windowSurface, (200), (250))
     drawText('счет:' + str(score), font, windowSurface, (200), (300))
     drawText('Нажмите клавишу, чтобы играть снова', font, windowSurface, (200), (350))
-    drawText('0.75', font, windowSurface, (725), (750))
+    drawText('0.8', font, windowSurface, (825), (850))
     pygame.display.update()
 
 def presskey():
@@ -30,31 +30,34 @@ def presskey():
 
 def firing():
     if listarrows != [] and arrows >= 0:
-        arrow.top -= 1
+        arrow.y -= 1
         windowSurface.blit(arrowImage, arrow)
         return True
     else:
         return False
 
-windowSurface = pygame.display.set_mode((800, 800), 1, 32)
+windowSurface = pygame.display.set_mode((900, 900), 1, 32)
 pygame.display.set_caption('Мишень')
 
 GREEN = (0, 200, 0)
 
 TEXTCOLOR = (0, 0, 0)
-target = pygame.Rect(300, 50, 40, 40)
-bow = pygame.Rect(400, 650, 50, 50)
-arrow = pygame.Rect(300, 625, 40, 40)
 
 font = pygame.font.SysFont('1', 35)
 
 arrows = 10
 score = 0
 targets = 3
-x = 0
+
+target = pygame.Rect(0, 50, 40, 40)
+bow = pygame.Rect(300, 600, 50, 50)
+arrow = pygame.Rect(300, 625, 40, 40)
+
 listtargets = []
 listarrows = []
 listtargets.append(target)
+
+
 
 bowImage = pygame.image.load('bow.png')
 arrowImage = pygame.image.load('arrow.png')
@@ -64,20 +67,20 @@ targetRect = targetImage.get_rect()
 arrowRect = arrowImage.get_rect()
 
 while True:
-    x += 1
+    target.x +=1
     windowSurface.fill(GREEN)
-    bow.topleft = (250, 600)
     windowSurface.blit(bowImage, bow)
     drawText('стрелы: ' + str(arrows), font, windowSurface, (20), (40))
     drawText('счет: ' + str(score), font, windowSurface, (20), (65))
-    drawText('0.75', font, windowSurface, (725), (750))
+    drawText('0.8', font, windowSurface, (825), (850))
     if arrow.y == -50:
         listarrows.remove(arrow)
         arrow.y = 625
-    if x == 800 and listtargets != []:
-        x = -50
+    if target.x >= -100 or target.x < 800:
+        windowSurface.blit(targetImage, target)
+    if target.x == 900:
+        target.x = -100
     if listtargets != []:
-        target = pygame.Rect(x, 50, 40, 40)
         windowSurface.blit(targetImage, target)
     firing()
     if arrows >= 0:
@@ -103,8 +106,8 @@ while True:
             arrows += 2
             listtargets.remove(target)
             listarrows.remove(arrow)
-            x = -50
             listtargets.append(target)
+            target.x = -100
             arrow.y = 625
 
     if arrows >= 0:
@@ -117,3 +120,4 @@ while True:
         presskey()
         drawText('0.75', font, windowSurface, (725), (750))
         arrows = 10
+        score = 0
